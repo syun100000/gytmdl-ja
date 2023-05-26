@@ -12,6 +12,21 @@ Gytmdl GUIはYouTube Musicから音楽をダウンロードし、適切なメタ
 
 ## インストールと使用方法
 
+### コンパイル
+pyinstallerを使用して、GUIアプリケーションをコンパイルすることができます。
+```bash
+pip install pyinstaller
+```
+
+Mac OS
+```bash
+pyinstaller --windowed --onefile --icon=gytmdl_gui.icns gytmdl_gui.py
+```
+
+Windows
+```bash
+pyinstaller --onefile --icon=gytmdl_gui.ico gytmdl_gui.py
+```
 
 アプリケーションが開始されると、GUIが表示されます。適切なパラメータを設定し、音楽のダウンロードを開始します。
 
@@ -26,3 +41,5 @@ MIT License
 ---
 
 以上が基本的なREADME.mdの内容となります。何か不明な点があれば、お気軽にお問い合わせください。
+
+
