@@ -4,7 +4,7 @@ import configparser
 from gytmdl import Gytmdl
 import pyperclip
 
-
+__version__ = '0.0.1'
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
