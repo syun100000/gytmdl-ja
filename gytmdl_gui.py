@@ -11,7 +11,6 @@ class Application(tk.Frame):
         self.config = configparser.ConfigParser()
         self.load_config()
         self.pack()
-        # self.grid()
         self.create_widgets()
 
     def create_widgets(self):
@@ -186,7 +185,7 @@ class Application(tk.Frame):
         self.final_path_entry.insert(0, folder_path)
 
 root = tk.Tk()
-root.title("GYTMDLJA")
+root.title("Gytmdl GUI - Graphical YouTube Music Downloader")
 root.geometry("1024x680")  # Adjust window size as needed
 app = Application(master=root)
 app.mainloop()
