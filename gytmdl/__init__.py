@@ -1,7 +1,7 @@
 import shutil
 import argparse
 import traceback
-from .gytmdlja import Gytmdl
+from .gytmdl import Gytmdl
 
 __version__ = '0.9'
 

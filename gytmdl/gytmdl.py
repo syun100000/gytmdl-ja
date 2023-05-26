@@ -9,8 +9,9 @@ from mutagen.mp4 import MP4, MP4Cover
 
 
 class Gytmdl:
-    def __init__(self, cookies_location, itag, final_path, temp_path, overwrite, skip_cleanup):
-        self.ytmusic = YTMusic(language="ja")
+    def __init__(self, cookies_location, itag, final_path, temp_path, overwrite, skip_cleanup,download_language):
+        self.download_language = download_language
+        self.ytmusic = YTMusic(language=download_language)
         self.cookies_location = Path(cookies_location)
         self.itag = itag
         self.final_path = Path(final_path)
