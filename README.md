@@ -30,6 +30,8 @@ pyinstaller --onefile --icon=gytmdl_gui.ico gytmdl_gui.py
 
 アプリケーションが開始されると、GUIが表示されます。適切なパラメータを設定し、音楽のダウンロードを開始します。
 
+URLS.TXTは次の拡張機能を使って簡単に作成できます。
+https://github.com/syun100000/GET_URLS
 ## 注意事項
 
 このツールはYouTubeの利用規約に抵触する可能性があります。自己責任で使用してください。
