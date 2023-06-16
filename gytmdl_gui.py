@@ -21,71 +21,72 @@ class Application(tk.Frame):
         self.url_entry = tk.Entry(self,width=100)
         self.url_entry.pack()
 
-        self.paste_button = tk.Button(self, text="Clear(URL)", command=self.clear_url,font=("",18))  # New Button for Paste
+        self.paste_button = tk.Button(self, text="URLをクリア", command=self.clear_url,font=("",18))  # ペースト用の新しいボタン
         self.paste_button.pack()
 
-        self.paste_button = tk.Button(self, text="Paste", command=self.paste_clipboard,font=("",25))  # New Button for Paste
+        self.paste_button = tk.Button(self, text="貼り付け", command=self.paste_clipboard,font=("",25))  # ペースト用の新しいボタン
         self.paste_button.pack()
 
-        self.urls_txt_label = tk.Label(self, text="URLs from txt")
+        self.urls_txt_label = tk.Label(self, text="txtからのURL")
         self.urls_txt_label.pack()
 
         self.urls_txt_entry = tk.Entry(self)
         self.urls_txt_entry.insert(0, self.config.get('DEFAULT', 'urls_txt', fallback=''))
         self.urls_txt_entry.pack()
 
-        self.urls_txt_browse_button = tk.Button(self, text="Browse", command=self.browse_txt_file)
+        self.urls_txt_browse_button = tk.Button(self, text="参照", command=self.browse_txt_file)
         self.urls_txt_browse_button.pack()
 
-        self.cookies_label = tk.Label(self, text="Cookies")
+        self.cookies_label = tk.Label(self, text="クッキーの場所")
         self.cookies_label.pack()
 
         self.cookies_entry = tk.Entry(self, show='*')
         self.cookies_entry.insert(0, self.config.get('DEFAULT', 'cookies', fallback=''))
         self.cookies_entry.pack()
 
-        self.cookies_browse_button = tk.Button(self, text="Browse", command=self.browse_cookies_file)
+        self.cookies_browse_button = tk.Button(self, text="参照", command=self.browse_cookies_file)
         self.cookies_browse_button.pack()
 
-        self.delete_cookies_button = tk.Button(self, text="Delete Cookies", command=self.delete_cookies)
+        self.delete_cookies_button = tk.Button(self, text="クッキーを削除", command=self.delete_cookies)
         self.delete_cookies_button.pack()
 
-        self.quality_label = tk.Label(self, text="Quality (140, 251, or 141)")
+        self.quality_label = tk.Label(self, text="品質 (140, 251, または 141)")
         self.quality_label.pack()
 
         self.quality_entry = tk.Entry(self)
         self.quality_entry.insert(0, self.config.get('DEFAULT', 'quality', fallback='140'))
         self.quality_entry.pack()
 
-        self.download_language_label = tk.Label(self, text="en or ja or ...")
+        self.download_language_label = tk.Label(self, text="ダウンロード言語 (en, ja, etc...)")
         self.download_language_label.pack()
 
         self.download_language_entry = tk.Entry(self)
         self.download_language_entry.insert(0, self.config.get('DEFAULT', 'download_language', fallback='ja'))
         self.download_language_entry.pack()
 
-        self.final_path_label = tk.Label(self, text="Final Path")
+        self.final_path_label = tk.Label(self, text="保存先")
         self.final_path_label.pack()
 
         self.final_path_entry = tk.Entry(self)
         self.final_path_entry.insert(0, self.config.get('DEFAULT', 'final_path', fallback=''))
         self.final_path_entry.pack()
 
-        self.final_path_browse_button = tk.Button(self, text="Browse", command=self.browse_final_path)
+        self.final_path_browse_button = tk.Button(self, text="参照", command=self.browse_final_path)
         self.final_path_browse_button.pack()
 
-        self.download_button = tk.Button(self, text="DOWNLOAD", fg="red", command=self.download_music,font=("",25))
+        self.download_button = tk.Button(self, text="ダウンロード", fg="red", command=self.download_music,font=("",25))
         self.download_button.pack()
 
-        self.progress_label = tk.Label(self, text="Download progress:")
+        self.progress_label = tk.Label(self, text="ダウンロード進行状況：")
         self.progress_label.pack()
 
         self.progress_status = tk.StringVar(self)
         self.progress_display = tk.Label(self,width=200,textvariable=self.progress_status)
         self.progress_display.pack(fill=tk.X, expand=True)
 
-        self.quit = tk.Button(self, text="QUIT", fg="red", command=root.destroy)
+        self.quit = tk.Button(self, text="終了", fg="red", command=root.destroy)
         self.quit.pack()
+
         
     def clear_url(self):
         self.url_entry.delete(0, tk.END)
@@ -132,7 +133,7 @@ class Application(tk.Frame):
                     try:
                         # Update the progress
                         print("トライに入りました")
-                        self.progress_status.set(f'Downloading "{track["title"]}" '
+                        self.progress_status.set(f'ダウンロード中 "{track["title"]}" '
                                                 f'(track {i + 1}/{len(download_queue)})\n'
                                                 f'from URL {url}')
                         self.update()
@@ -159,7 +160,7 @@ class Application(tk.Frame):
                         
                     except:
                         error_count += 1
-                        self.progress_status.set(f'Downloading "{track["title"]}" '
+                        self.progress_status.set(f'ダウンロード中 "{track["title"]}" '
                                                 f'(track {i + 1}/{len(download_queue)})\n'
                                                 f'from URL {url}')
                         self.update()
@@ -169,9 +170,10 @@ class Application(tk.Frame):
 
         # Set download completed message
         if error_count == 0:
-            self.progress_status.set("Download completed!")
+            self.progress_status.set("ダウンロード完了!")
         else:
-            self.progress_status.set(f"Download completed with {error_count} error(s).")
+            self.progress_status.set(f" ダウンロード未完了 {error_count} つエラーがありました。もしかしたらffmpegがないかもしれません")
+            
 
     def load_config(self):
         self.config.read('config.ini')
