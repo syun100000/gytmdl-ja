@@ -11,13 +11,20 @@ Gytmdl GUIはYouTube Musicから音楽をダウンロードし、適切なメタ
 - GUIを使用して簡単に操作
 
 ## インストールと使用方法
-
+```bash
 pip install -r requirements.txt
+```
 
-ffmpegをインストールしてください。  
+ffmpegをインストールしてください。  pathに追加してください。
+
+gytmdl_gui.pyファイルをPythonで実行してください。
 
 
-### コンパイル
+### クッキーファイルの配置
+
+YouTubeのプレミアム品質を利用するためには、YouTubeのクッキーが必要です。クッキーは[このChrome拡張機能](https://chrome.google.com/webstore/detail/open-cookiestxt/gdocmgbfkjnnpapoeobnolbbkoibbcif)を使用して取得できます。クッキーのテキストファイルを `youtube.com_cookies.txt` としてプロジェクトのルートディレクトリに配置してください。
+
+## コンパイル
 pyinstallerを使用して、GUIアプリケーションをコンパイルすることができます。
 ```bash
 pip install pyinstaller
