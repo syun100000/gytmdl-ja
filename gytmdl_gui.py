@@ -3,6 +3,7 @@ from tkinter import filedialog
 import configparser
 from gytmdl import Gytmdl
 import pyperclip
+import os
 
 __version__ = '0.0.1'
 class Application(tk.Frame):
@@ -96,9 +97,9 @@ class Application(tk.Frame):
     def download_music(self):
         url = self.url_entry.get().strip()  # Remove any leading/trailing whitespace
         urls_txt = self.urls_txt_entry.get()
-        cookies = self.cookies_entry.get()
+        cookies = os.path.abspath(self.cookies_entry.get())
         quality = self.quality_entry.get()
-        final_path = self.final_path_entry.get()
+        final_path = os.path.abspath(self.final_path_entry.get())
         download_language = self.download_language_entry.get()
 
         self.config['DEFAULT']['urls_txt'] = urls_txt
@@ -110,7 +111,8 @@ class Application(tk.Frame):
         with open('config.ini', 'w') as configfile:
             self.config.write(configfile)
 
-        dl = Gytmdl(cookies, quality, final_path, 'temp', False, False,download_language)
+        temp=os.path.join(final_path,"temp")
+        dl = Gytmdl(cookies, quality, final_path, temp, False, False,download_language)
 
         # Start with the single URL from the url_entry, if any
         urls = [url] if url else []
@@ -129,28 +131,39 @@ class Application(tk.Frame):
                 for i, track in enumerate(download_queue):
                     try:
                         # Update the progress
+                        print("トライに入りました")
                         self.progress_status.set(f'Downloading "{track["title"]}" '
                                                 f'(track {i + 1}/{len(download_queue)})\n'
                                                 f'from URL {url}')
                         self.update()
-
+                        print(f'Downloading "{track["title"]}" ')
                         ytmusic_watch_playlist = dl.get_ytmusic_watch_playlist(track['id'])
                         if ytmusic_watch_playlist is None:
+                            print("ytmusic_watch_playlist is None")
                             track['id'] = dl.search_track(track['title'])
                             ytmusic_watch_playlist = dl.get_ytmusic_watch_playlist(track['id'])
                         tags = dl.get_tags(ytmusic_watch_playlist)
+                        print("get_tags")
                         final_location = dl.get_final_location(tags)
+                        print("get_final_location")
                         temp_location = dl.get_temp_location(track['id'])
+                        print("get_temp_location")
                         dl.download(track['id'], temp_location)
+                        print("download")
                         fixed_location = dl.get_fixed_location(track['id'])
+                        print("get_fixed_location")
                         dl.fixup(temp_location, fixed_location)
+                        print("fixup")
                         dl.make_final(final_location, fixed_location, tags)
+                        print(f'Downloaded "{track["title"]}" from URL {url}')
+                        
                     except:
                         error_count += 1
                         self.progress_status.set(f'Downloading "{track["title"]}" '
                                                 f'(track {i + 1}/{len(download_queue)})\n'
                                                 f'from URL {url}')
                         self.update()
+                        print(f'Error downloading "{track["title"]}" from URL {url}')
                     finally:
                         dl.cleanup()
 

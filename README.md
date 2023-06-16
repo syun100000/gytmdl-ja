@@ -12,6 +12,11 @@ Gytmdl GUIはYouTube Musicから音楽をダウンロードし、適切なメタ
 
 ## インストールと使用方法
 
+pip install -r requirements.txt
+
+ffmpegをインストールしてください。  
+
+
 ### コンパイル
 pyinstallerを使用して、GUIアプリケーションをコンパイルすることができます。
 ```bash
