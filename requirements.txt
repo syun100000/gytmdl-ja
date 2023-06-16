@@ -2,7 +2,6 @@ ytmusicapi
 yt_dlp
 requests
 mutagen
-tkinter
 argparse
 traceback
 filedialog
