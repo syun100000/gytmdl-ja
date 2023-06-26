@@ -3,8 +3,6 @@ import argparse
 import traceback
 from .gytmdl import Gytmdl
 
-__version__ = '0.9'
-
 
 def main():
     if not shutil.which('ffmpeg'):

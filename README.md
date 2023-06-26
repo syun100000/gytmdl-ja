@@ -24,20 +24,23 @@ gytmdl_gui.pyファイルをPythonで実行してください。
 
 YouTubeのプレミアム品質を利用するためには、YouTubeのクッキーが必要です。クッキーは[このChrome拡張機能](https://chrome.google.com/webstore/detail/open-cookiestxt/gdocmgbfkjnnpapoeobnolbbkoibbcif)を使用して取得できます。クッキーのテキストファイルを `youtube.com_cookies.txt` としてプロジェクトのルートディレクトリに配置してください。
 
-## コンパイル
-pyinstallerを使用して、GUIアプリケーションをコンパイルすることができます。
+## コンパイルしてPythonを使用しないで実行する
+cx_Freezeを使用して、GUIアプリケーションをコンパイルすることができます。
+しかし、ffmpegは変わらずインストールする必要があります。
 ```bash
-pip install pyinstaller
+pip install cx_Freeze
 ```
 
 Mac OS
 ```bash
-pyinstaller --windowed --onefile --icon=gytmdl_gui.icns gytmdl_gui.py
+python setup.py build
+
 ```
 
 Windows
 ```bash
-pyinstaller --onefile --icon=gytmdl_gui.ico gytmdl_gui.py
+python setup.py build
+
 ```
 
 アプリケーションが開始されると、GUIが表示されます。適切なパラメータを設定し、音楽のダウンロードを開始します。

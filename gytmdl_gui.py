@@ -9,7 +9,7 @@ from tkinter import ttk
 import threading
 
 
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -224,3 +224,4 @@ root.title("Gytmdl GUI - Graphical YouTube Music Downloader")
 root.geometry("1024x680")  # Adjust window size as needed
 app = Application(master=root)
 app.mainloop()
+
