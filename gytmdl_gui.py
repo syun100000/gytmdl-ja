@@ -6,6 +6,8 @@ import pyperclip
 import os
 import sys
 from tkinter import ttk
+import threading
+
 
 __version__ = '0.0.1'
 class Application(tk.Frame):
@@ -32,17 +34,20 @@ class Application(tk.Frame):
         self.urls_txt_label = tk.Label(self, text="txtからのURL")
         self.urls_txt_label.pack()
 
-        self.urls_txt_entry = tk.Entry(self)
+        self.urls_txt_entry = tk.Entry(self,width=80)
         self.urls_txt_entry.insert(0, self.config.get('DEFAULT', 'urls_txt', fallback=''))
         self.urls_txt_entry.pack()
 
         self.urls_txt_browse_button = tk.Button(self, text="参照", command=self.browse_txt_file)
         self.urls_txt_browse_button.pack()
+        
+        self.delete_urls_txt_button = tk.Button(self, text="クリア", command=self.delete_txt_file)
+        self.delete_urls_txt_button.pack()
 
         self.cookies_label = tk.Label(self, text="クッキーの場所")
         self.cookies_label.pack()
 
-        self.cookies_entry = tk.Entry(self, show='*')
+        self.cookies_entry = tk.Entry(self, width=80)
         self.cookies_entry.insert(0, self.config.get('DEFAULT', 'cookies', fallback=''))
         self.cookies_entry.pack()
 
@@ -54,9 +59,8 @@ class Application(tk.Frame):
 
         self.quality_label = tk.Label(self, text="品質 (140, 251, または 141)")
         self.quality_label.pack()
-
         self.quality_entry = tk.Entry(self)
-        self.quality_entry.insert(0, self.config.get('DEFAULT', 'quality', fallback='140'))
+        self.quality_entry.insert(0, self.config.get('DEFAULT', 'quality', fallback='141'))
         self.quality_entry.pack()
 
         self.download_language_label = tk.Label(self, text="ダウンロード言語 (en, ja, etc...)")
@@ -69,14 +73,14 @@ class Application(tk.Frame):
         self.final_path_label = tk.Label(self, text="保存先")
         self.final_path_label.pack()
 
-        self.final_path_entry = tk.Entry(self)
+        self.final_path_entry = tk.Entry(self,width=80)
         self.final_path_entry.insert(0, self.config.get('DEFAULT', 'final_path', fallback=''))
         self.final_path_entry.pack()
 
         self.final_path_browse_button = tk.Button(self, text="参照", command=self.browse_final_path)
         self.final_path_browse_button.pack()
 
-        self.download_button = tk.Button(self, text="ダウンロード", fg="red", command=self.download_music,font=("",25))
+        self.download_button = tk.Button(self, text="ダウンロード", fg="red", command=self.start_download_thread,font=("",25))
         self.download_button.pack()
 
         self.progress_label = tk.Label(self, text="ダウンロード進行状況：")
@@ -92,7 +96,7 @@ class Application(tk.Frame):
         self.quit = tk.Button(self, text="終了", fg="red", command=sys.exit)
         self.quit.pack()
 
-        
+
     def clear_url(self):
         self.url_entry.delete(0, tk.END)
     def paste_clipboard(self):
@@ -179,12 +183,22 @@ class Application(tk.Frame):
             print(f"ダウンロード未完了 {error_count} 個のエラーがありました。もしかしたらffmpegがないかもしれません")
             self.progress_bar['value'] = 0
 
+    def start_download_thread(self):
+        download_thread = threading.Thread(target=self.download_music)
+        download_thread.start()
+    
     def load_config(self):
         self.config.read('config.ini')
 
     def delete_cookies(self):
         self.config['DEFAULT']['cookies'] = ''
         self.cookies_entry.delete(0, tk.END)
+        with open('config.ini', 'w') as configfile:
+            self.config.write(configfile)
+    
+    def delete_txt_file(self):
+        self.config['DEFAULT']['urls_txt'] = ''
+        self.urls_txt_entry.delete(0, tk.END)
         with open('config.ini', 'w') as configfile:
             self.config.write(configfile)
 
@@ -203,7 +217,7 @@ class Application(tk.Frame):
         self.final_path_entry.delete(0, tk.END)
         self.final_path_entry.insert(0, folder_path)
     
-        
+    
 
 root = tk.Tk()
 root.title("Gytmdl GUI - Graphical YouTube Music Downloader")
