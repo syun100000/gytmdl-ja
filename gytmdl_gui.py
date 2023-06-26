@@ -4,6 +4,7 @@ import configparser
 from gytmdl import Gytmdl
 import pyperclip
 import os
+import sys
 
 __version__ = '0.0.1'
 class Application(tk.Frame):
@@ -84,7 +85,7 @@ class Application(tk.Frame):
         self.progress_display = tk.Label(self,width=200,textvariable=self.progress_status)
         self.progress_display.pack(fill=tk.X, expand=True)
 
-        self.quit = tk.Button(self, text="終了", fg="red", command=root.destroy)
+        self.quit = tk.Button(self, text="終了", fg="red", command=sys.exit)
         self.quit.pack()
 
         
@@ -125,36 +126,31 @@ class Application(tk.Frame):
         # Error count
         error_count = 0
 
-        for url in urls:
+        for j, url in enumerate(urls):
             if url:  # Only proceed if the url is not empty
                 download_queue = dl.get_download_queue(url.strip())
                 # Process each track in the download queue
                 for i, track in enumerate(download_queue):
                     try:
                         # Update the progress
-                        print("トライに入りました")
+                        # 全体のタスク数を計算する
+                        total_task = len(download_queue) * len(urls)
                         self.progress_status.set(f'ダウンロード中 "{track["title"]}" '
                                                 f'(track {i + 1}/{len(download_queue)})\n'
-                                                f'from URL {url}')
+                                                f'from URL {j + 1}/{len(urls)}\n'
+                                                f'全体の進行状況{int(((i+1)*(j+1)/total_task)*100)}%')
                         self.update()
-                        print(f'Downloading "{track["title"]}" ')
                         ytmusic_watch_playlist = dl.get_ytmusic_watch_playlist(track['id'])
                         if ytmusic_watch_playlist is None:
                             print("ytmusic_watch_playlist is None")
                             track['id'] = dl.search_track(track['title'])
                             ytmusic_watch_playlist = dl.get_ytmusic_watch_playlist(track['id'])
                         tags = dl.get_tags(ytmusic_watch_playlist)
-                        print("get_tags")
                         final_location = dl.get_final_location(tags)
-                        print("get_final_location")
                         temp_location = dl.get_temp_location(track['id'])
-                        print("get_temp_location")
                         dl.download(track['id'], temp_location)
-                        print("download")
                         fixed_location = dl.get_fixed_location(track['id'])
-                        print("get_fixed_location")
                         dl.fixup(temp_location, fixed_location)
-                        print("fixup")
                         dl.make_final(final_location, fixed_location, tags)
                         print(f'Downloaded "{track["title"]}" from URL {url}')
                         
@@ -171,6 +167,7 @@ class Application(tk.Frame):
         # Set download completed message
         if error_count == 0:
             self.progress_status.set("ダウンロード完了!")
+            print("ダウンロード完了!")
         else:
             self.progress_status.set(f" ダウンロード未完了 {error_count} つエラーがありました。もしかしたらffmpegがないかもしれません")
             
@@ -198,6 +195,8 @@ class Application(tk.Frame):
         folder_path = filedialog.askdirectory()
         self.final_path_entry.delete(0, tk.END)
         self.final_path_entry.insert(0, folder_path)
+    
+        
 
 root = tk.Tk()
 root.title("Gytmdl GUI - Graphical YouTube Music Downloader")
