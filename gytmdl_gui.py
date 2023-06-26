@@ -5,6 +5,7 @@ from gytmdl import Gytmdl
 import pyperclip
 import os
 import sys
+from tkinter import ttk
 
 __version__ = '0.0.1'
 class Application(tk.Frame):
@@ -80,6 +81,9 @@ class Application(tk.Frame):
 
         self.progress_label = tk.Label(self, text="ダウンロード進行状況：")
         self.progress_label.pack()
+        
+        self.progress_bar = ttk.Progressbar(self, length=200, mode='determinate')
+        self.progress_bar.pack()
 
         self.progress_status = tk.StringVar(self)
         self.progress_display = tk.Label(self,width=200,textvariable=self.progress_status)
@@ -135,10 +139,12 @@ class Application(tk.Frame):
                         # Update the progress
                         # 全体のタスク数を計算する
                         total_task = len(download_queue) * len(urls)
+                        progress_percentage = int(((i+1)*(j+1)/total_task)*100)
+                        self.progress_bar['value'] = progress_percentage
                         self.progress_status.set(f'ダウンロード中 "{track["title"]}" '
                                                 f'(track {i + 1}/{len(download_queue)})\n'
                                                 f'from URL {j + 1}/{len(urls)}\n'
-                                                f'全体の進行状況{int(((i+1)*(j+1)/total_task)*100)}%')
+                                                f'全体の進行状況{progress_percentage}%')
                         self.update()
                         ytmusic_watch_playlist = dl.get_ytmusic_watch_playlist(track['id'])
                         if ytmusic_watch_playlist is None:
@@ -164,13 +170,14 @@ class Application(tk.Frame):
                     finally:
                         dl.cleanup()
 
-        # Set download completed message
         if error_count == 0:
             self.progress_status.set("ダウンロード完了!")
             print("ダウンロード完了!")
+            self.progress_bar['value'] = 100
         else:
-            self.progress_status.set(f" ダウンロード未完了 {error_count} つエラーがありました。もしかしたらffmpegがないかもしれません")
-            
+            self.progress_status.set(f" ダウンロード未完了 {error_count} 個のエラーがありました。もしかしたらffmpegがないかもしれません")
+            print(f"ダウンロード未完了 {error_count} 個のエラーがありました。もしかしたらffmpegがないかもしれません")
+            self.progress_bar['value'] = 0
 
     def load_config(self):
         self.config.read('config.ini')
